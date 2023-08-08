@@ -4,18 +4,18 @@ package pb;
 option go_package = "./pkg/pb";
 
 service AuthService {
-    rpc Register (RegisterRequest) returns (RegisterResponse){}
-    rpc RegisterOtpVerify (OtpVerifyRequest) returns (OtpVerifyResponse){}
-    rpc Login (LoginRequest) returns (LoginResponse){}
+    rpc UserSignUp (UserSignUpRequest) returns (UserSignUpResponse){}
+    rpc SignupOtpVerify (OtpVerifyRequest) returns (OtpVerifyResponse){}
+    rpc UserLoginByEmail (LoginRequest) returns (LoginResponse){}
   //  rpc Validate (ValidateRequest) returns (ValidateResponse){}
-    rpc AdminSignup (AdminSignupRequest) returns (AdminSignupResponse){}
+    rpc CreateAdmin (AdminSignupRequest) returns (AdminSignupResponse){}
     rpc AdminLogin (LoginRequest) returns (AdminLoginResponse){}
-    rpc AddUserAddress (AddUserAddressRequest) returns (AddUserAddressResponse){}
+    rpc AddAddress (AddUserAddressRequest) returns (AddUserAddressResponse){}
   //  rpc ListUserAddress (ShowUserAddressRequest) returns (ShowUserAddressResponse){}
 }
 
-//Register
-message RegisterRequest {
+//UserSignUp
+message UserSignUpRequest {
     string first_name = 1;
     string last_name = 2;
     string email = 3;
@@ -23,7 +23,7 @@ message RegisterRequest {
     string password = 5;
 }
 
-message RegisterResponse {
+message UserSignUpResponse {
     int64 status = 1;
     string responseid=2;
     string error = 3;

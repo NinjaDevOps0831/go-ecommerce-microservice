@@ -18,13 +18,13 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
-	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
-	RegisterOtpVerify(ctx context.Context, in *OtpVerifyRequest, opts ...grpc.CallOption) (*OtpVerifyResponse, error)
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	UserSignUp(ctx context.Context, in *UserSignUpRequest, opts ...grpc.CallOption) (*UserSignUpResponse, error)
+	SignupOtpVerify(ctx context.Context, in *OtpVerifyRequest, opts ...grpc.CallOption) (*OtpVerifyResponse, error)
+	UserLoginByEmail(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	//  rpc Validate (ValidateRequest) returns (ValidateResponse){}
-	AdminSignup(ctx context.Context, in *AdminSignupRequest, opts ...grpc.CallOption) (*AdminSignupResponse, error)
+	CreateAdmin(ctx context.Context, in *AdminSignupRequest, opts ...grpc.CallOption) (*AdminSignupResponse, error)
 	AdminLogin(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*AdminLoginResponse, error)
-	AddUserAddress(ctx context.Context, in *AddUserAddressRequest, opts ...grpc.CallOption) (*AddUserAddressResponse, error)
+	AddAddress(ctx context.Context, in *AddUserAddressRequest, opts ...grpc.CallOption) (*AddUserAddressResponse, error)
 }
 
 type authServiceClient struct {
@@ -35,36 +35,36 @@ func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
 	return &authServiceClient{cc}
 }
 
-func (c *authServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
-	out := new(RegisterResponse)
-	err := c.cc.Invoke(ctx, "/pb.AuthService/Register", in, out, opts...)
+func (c *authServiceClient) UserSignUp(ctx context.Context, in *UserSignUpRequest, opts ...grpc.CallOption) (*UserSignUpResponse, error) {
+	out := new(UserSignUpResponse)
+	err := c.cc.Invoke(ctx, "/pb.AuthService/UserSignUp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authServiceClient) RegisterOtpVerify(ctx context.Context, in *OtpVerifyRequest, opts ...grpc.CallOption) (*OtpVerifyResponse, error) {
+func (c *authServiceClient) SignupOtpVerify(ctx context.Context, in *OtpVerifyRequest, opts ...grpc.CallOption) (*OtpVerifyResponse, error) {
 	out := new(OtpVerifyResponse)
-	err := c.cc.Invoke(ctx, "/pb.AuthService/RegisterOtpVerify", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.AuthService/SignupOtpVerify", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
+func (c *authServiceClient) UserLoginByEmail(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
 	out := new(LoginResponse)
-	err := c.cc.Invoke(ctx, "/pb.AuthService/Login", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.AuthService/UserLoginByEmail", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *authServiceClient) AdminSignup(ctx context.Context, in *AdminSignupRequest, opts ...grpc.CallOption) (*AdminSignupResponse, error) {
+func (c *authServiceClient) CreateAdmin(ctx context.Context, in *AdminSignupRequest, opts ...grpc.CallOption) (*AdminSignupResponse, error) {
 	out := new(AdminSignupResponse)
-	err := c.cc.Invoke(ctx, "/pb.AuthService/AdminSignup", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.AuthService/CreateAdmin", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,9 +80,9 @@ func (c *authServiceClient) AdminLogin(ctx context.Context, in *LoginRequest, op
 	return out, nil
 }
 
-func (c *authServiceClient) AddUserAddress(ctx context.Context, in *AddUserAddressRequest, opts ...grpc.CallOption) (*AddUserAddressResponse, error) {
+func (c *authServiceClient) AddAddress(ctx context.Context, in *AddUserAddressRequest, opts ...grpc.CallOption) (*AddUserAddressResponse, error) {
 	out := new(AddUserAddressResponse)
-	err := c.cc.Invoke(ctx, "/pb.AuthService/AddUserAddress", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/pb.AuthService/AddAddress", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -93,13 +93,13 @@ func (c *authServiceClient) AddUserAddress(ctx context.Context, in *AddUserAddre
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
 type AuthServiceServer interface {
-	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
-	RegisterOtpVerify(context.Context, *OtpVerifyRequest) (*OtpVerifyResponse, error)
-	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	UserSignUp(context.Context, *UserSignUpRequest) (*UserSignUpResponse, error)
+	SignupOtpVerify(context.Context, *OtpVerifyRequest) (*OtpVerifyResponse, error)
+	UserLoginByEmail(context.Context, *LoginRequest) (*LoginResponse, error)
 	//  rpc Validate (ValidateRequest) returns (ValidateResponse){}
-	AdminSignup(context.Context, *AdminSignupRequest) (*AdminSignupResponse, error)
+	CreateAdmin(context.Context, *AdminSignupRequest) (*AdminSignupResponse, error)
 	AdminLogin(context.Context, *LoginRequest) (*AdminLoginResponse, error)
-	AddUserAddress(context.Context, *AddUserAddressRequest) (*AddUserAddressResponse, error)
+	AddAddress(context.Context, *AddUserAddressRequest) (*AddUserAddressResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -107,23 +107,23 @@ type AuthServiceServer interface {
 type UnimplementedAuthServiceServer struct {
 }
 
-func (UnimplementedAuthServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
+func (UnimplementedAuthServiceServer) UserSignUp(context.Context, *UserSignUpRequest) (*UserSignUpResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserSignUp not implemented")
 }
-func (UnimplementedAuthServiceServer) RegisterOtpVerify(context.Context, *OtpVerifyRequest) (*OtpVerifyResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RegisterOtpVerify not implemented")
+func (UnimplementedAuthServiceServer) SignupOtpVerify(context.Context, *OtpVerifyRequest) (*OtpVerifyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SignupOtpVerify not implemented")
 }
-func (UnimplementedAuthServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+func (UnimplementedAuthServiceServer) UserLoginByEmail(context.Context, *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserLoginByEmail not implemented")
 }
-func (UnimplementedAuthServiceServer) AdminSignup(context.Context, *AdminSignupRequest) (*AdminSignupResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AdminSignup not implemented")
+func (UnimplementedAuthServiceServer) CreateAdmin(context.Context, *AdminSignupRequest) (*AdminSignupResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAdmin not implemented")
 }
 func (UnimplementedAuthServiceServer) AdminLogin(context.Context, *LoginRequest) (*AdminLoginResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AdminLogin not implemented")
 }
-func (UnimplementedAuthServiceServer) AddUserAddress(context.Context, *AddUserAddressRequest) (*AddUserAddressResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddUserAddress not implemented")
+func (UnimplementedAuthServiceServer) AddAddress(context.Context, *AddUserAddressRequest) (*AddUserAddressResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddAddress not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -138,74 +138,74 @@ func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
 	s.RegisterService(&AuthService_ServiceDesc, srv)
 }
 
-func _AuthService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegisterRequest)
+func _AuthService_UserSignUp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserSignUpRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).Register(ctx, in)
+		return srv.(AuthServiceServer).UserSignUp(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.AuthService/Register",
+		FullMethod: "/pb.AuthService/UserSignUp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).Register(ctx, req.(*RegisterRequest))
+		return srv.(AuthServiceServer).UserSignUp(ctx, req.(*UserSignUpRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_RegisterOtpVerify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthService_SignupOtpVerify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(OtpVerifyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).RegisterOtpVerify(ctx, in)
+		return srv.(AuthServiceServer).SignupOtpVerify(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.AuthService/RegisterOtpVerify",
+		FullMethod: "/pb.AuthService/SignupOtpVerify",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).RegisterOtpVerify(ctx, req.(*OtpVerifyRequest))
+		return srv.(AuthServiceServer).SignupOtpVerify(ctx, req.(*OtpVerifyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthService_UserLoginByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(LoginRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).Login(ctx, in)
+		return srv.(AuthServiceServer).UserLoginByEmail(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.AuthService/Login",
+		FullMethod: "/pb.AuthService/UserLoginByEmail",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).Login(ctx, req.(*LoginRequest))
+		return srv.(AuthServiceServer).UserLoginByEmail(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_AdminSignup_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthService_CreateAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AdminSignupRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).AdminSignup(ctx, in)
+		return srv.(AuthServiceServer).CreateAdmin(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.AuthService/AdminSignup",
+		FullMethod: "/pb.AuthService/CreateAdmin",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).AdminSignup(ctx, req.(*AdminSignupRequest))
+		return srv.(AuthServiceServer).CreateAdmin(ctx, req.(*AdminSignupRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -228,20 +228,20 @@ func _AuthService_AdminLogin_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_AddUserAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AuthService_AddAddress_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddUserAddressRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).AddUserAddress(ctx, in)
+		return srv.(AuthServiceServer).AddAddress(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.AuthService/AddUserAddress",
+		FullMethod: "/pb.AuthService/AddAddress",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).AddUserAddress(ctx, req.(*AddUserAddressRequest))
+		return srv.(AuthServiceServer).AddAddress(ctx, req.(*AddUserAddressRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -254,28 +254,28 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Register",
-			Handler:    _AuthService_Register_Handler,
+			MethodName: "UserSignUp",
+			Handler:    _AuthService_UserSignUp_Handler,
 		},
 		{
-			MethodName: "RegisterOtpVerify",
-			Handler:    _AuthService_RegisterOtpVerify_Handler,
+			MethodName: "SignupOtpVerify",
+			Handler:    _AuthService_SignupOtpVerify_Handler,
 		},
 		{
-			MethodName: "Login",
-			Handler:    _AuthService_Login_Handler,
+			MethodName: "UserLoginByEmail",
+			Handler:    _AuthService_UserLoginByEmail_Handler,
 		},
 		{
-			MethodName: "AdminSignup",
-			Handler:    _AuthService_AdminSignup_Handler,
+			MethodName: "CreateAdmin",
+			Handler:    _AuthService_CreateAdmin_Handler,
 		},
 		{
 			MethodName: "AdminLogin",
 			Handler:    _AuthService_AdminLogin_Handler,
 		},
 		{
-			MethodName: "AddUserAddress",
-			Handler:    _AuthService_AddUserAddress_Handler,
+			MethodName: "AddAddress",
+			Handler:    _AuthService_AddAddress_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
