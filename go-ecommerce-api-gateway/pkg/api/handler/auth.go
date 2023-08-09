@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/api/handlerutil"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/auth"
+	client "github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/client/interfaces"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/domain"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/model/request"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/model/response"
@@ -70,21 +72,21 @@ func (cr *AuthHandler) UserSignUp(c *gin.Context) {
 		return
 	}
 
-	userDetails, err := cr.userUseCase.UserSignUp(c.Request.Context(), newUserInfo)
+	userDetails, err := cr.Client.UserSignUp(context.Background(), newUserInfo)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.ErrorResponse(400, "failed to create user", err.Error(), nil))
 	}
 
 	//twilio otp send
 
-	responseID, err := cr.otpUseCase.TwilioSendOtp(c.Request.Context(), "+91"+userDetails.Phone)
-	if err != nil {
-		response := response.ErrorResponse(500, "failed to generate otp", err.Error(), nil)
+	// responseID, err := cr.otpUseCase.TwilioSendOtp(c.Request.Context(), "+91"+userDetails.Phone)
+	// if err != nil {
+	// 	response := response.ErrorResponse(500, "failed to generate otp", err.Error(), nil)
 
-		c.JSON(http.StatusInternalServerError, response)
-		return
+	// 	c.JSON(http.StatusInternalServerError, response)
+	// 	return
 
-	}
+	// }
 	response := response.SuccessResponse(200, "Success: Enter the otp and the response id", responseID)
 	c.JSON(http.StatusOK, response)
 
@@ -110,19 +112,19 @@ func (cr *AuthHandler) SignupOtpVerify(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, response.ErrorResponse(422, "unable to read the request body", err.Error(), nil))
 		return
 	}
-	otpsession, err := cr.otpUseCase.TwilioVerifyOTP(c.Request.Context(), otpverify)
+	otpsession, err := cr.Client.SignUpOtpVerify(context.Background(), otpverify)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.ErrorResponse(400, "Invalid Otp", err.Error(), nil))
 		return
 	}
 
 	// Call the OTPVerifyStatusManage method to update the verification status
-	err = cr.userUseCase.OTPVerifyStatusManage(c.Request.Context(), otpsession)
-	if err != nil {
-		response := response.ErrorResponse(500, "Failed to update verification status", err.Error(), nil)
-		c.JSON(http.StatusInternalServerError, response)
-		return
-	}
+	// err = cr.userUseCase.OTPVerifyStatusManage(c.Request.Context(), otpsession)
+	// if err != nil {
+	// 	response := response.ErrorResponse(500, "Failed to update verification status", err.Error(), nil)
+	// 	c.JSON(http.StatusInternalServerError, response)
+	// 	return
+	// }
 
 	response := response.SuccessResponse(200, "OTP validation Successfull..Account Created Successfully", nil)
 	c.JSON(200, response)
@@ -156,7 +158,7 @@ func (cr *AuthHandler) UserLoginByEmail(c *gin.Context) {
 	copier.Copy(&user, &body)
 
 	// get user from database and check password in usecase
-	user, err := cr.userUseCase.LoginWithEmail(c, body)
+	user, err := cr.Client.UserLoginByEmail(context.Background(), body)
 	if err != nil {
 		response := response.ErrorResponse(400, "failed to login", err.Error(), nil)
 		c.JSON(http.StatusBadRequest, response)
@@ -207,7 +209,7 @@ func (cr *AuthHandler) AddAddress(c *gin.Context) {
 		return
 	}
 
-	address, err := cr.userUseCase.AddAddress(c.Request.Context(), userAddressInput, userID)
+	address, err := cr.Client.AddAddress(context.Background(), userAddressInput, userID.(uint))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.ErrorResponse(400, "failed to add the address", err.Error(), nil))
 		return
@@ -246,7 +248,7 @@ func (cr *AuthHandler) CreateAdmin(c *gin.Context) {
 		return
 	}
 	//Now call the create admin method from admin usecase. The admin data will be saved to domain.admin after the succesful execution of the function
-	newAdminOutput, err := cr.adminUseCase.CreateAdmin(c.Request.Context(), newAdminInfo, adminID)
+	newAdminOutput, err := cr.Client.CreateAdmin(c.Request.Context(), newAdminInfo, adminID)
 
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.ErrorResponse(400, "failed to create the admin", err.Error(), nil))
@@ -278,7 +280,7 @@ func (cr *AuthHandler) AdminLogin(c *gin.Context) {
 		return
 	}
 	//call the adminlogin method of the adminusecase to login as an admin
-	tokenString, adminDataInModel, err := cr.adminUseCase.AdminLogin(c.Request.Context(), body)
+	tokenString, adminDataInModel, err := cr.Client.AdminLogin(c.Request.Context(), body)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.ErrorResponse(400, "failed to login", err.Error(), nil))
 		return

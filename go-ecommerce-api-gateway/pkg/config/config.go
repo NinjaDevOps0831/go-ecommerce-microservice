@@ -3,11 +3,11 @@ package config
 import "github.com/spf13/viper"
 
 type Config struct {
-	AuthService     string `mapstructure:"AUTH_SVC_URL"`
-	ProductService  string `mapstructure:"PRODUCT_SVC_URL"`
-	CartServiceUrl  string `mapstructure:"CART_SVC_URL"`
-	OrderServiceUrl string `mapstructure:"ORDER_SVC_URL"`
-	Port            string `mapstructure:"PORT"`
+	AuthServiceUrl    string `mapstructure:"AUTH_SVC_URL"`
+	ProductServiceUrl string `mapstructure:"PRODUCT_SVC_URL"`
+	CartServiceUrl    string `mapstructure:"CART_SVC_URL"`
+	OrderServiceUrl   string `mapstructure:"ORDER_SVC_URL"`
+	Port              string `mapstructure:"PORT"`
 }
 
 var envs = []string{"AUTH_SVC_URL",
