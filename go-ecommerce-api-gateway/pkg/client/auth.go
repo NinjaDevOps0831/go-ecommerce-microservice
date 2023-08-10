@@ -83,12 +83,13 @@ func (cr *authClient) AddAddress(ctx context.Context, userAddressInput request.U
 	return res, nil
 }
 
-func (cr *authClient) CreateAdmin(ctx context.Context, newAdminInfo request.NewAdminInfo) (*pb.AdminSignupResponse, error) {
+func (cr *authClient) CreateAdmin(ctx context.Context, newAdminInfo request.NewAdminInfo, adminID uint32) (*pb.AdminSignupResponse, error) {
 	res, err := cr.client.CreateAdmin(ctx, &pb.AdminSignupRequest{
 		UserName: newAdminInfo.UserName,
 		Email:    newAdminInfo.Email,
 		Phone:    newAdminInfo.Phone,
 		Password: newAdminInfo.Password,
+		AdminID:  adminID,
 	})
 
 	if err != nil {

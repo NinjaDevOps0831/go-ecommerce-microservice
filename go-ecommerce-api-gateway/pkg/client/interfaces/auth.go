@@ -18,6 +18,6 @@ type AuthClient interface {
 	//AuthorizationMiddleware(string) (*pb.ValidateResponse, error)
 
 	//Admin
-	CreateAdmin(ctx context.Context, newAdminInfo request.NewAdminInfo) (*pb.AdminSignupResponse, error)
+	CreateAdmin(ctx context.Context, newAdminInfo request.NewAdminInfo, adminID uint32) (*pb.AdminSignupResponse, error)
 	AdminLogin(ctx context.Context, body request.AdminLoginInfo) (*pb.AdminLoginResponse, error)
 }

@@ -64,6 +64,7 @@ message AdminSignupRequest {
     string email = 2;
     string phone = 3;
     string password = 4;
+    uint32 adminID = 5;
 }
 
 message Admin {    
