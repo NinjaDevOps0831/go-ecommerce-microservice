@@ -8,11 +8,13 @@ type Config struct {
 	CartServiceUrl    string `mapstructure:"CART_SVC_URL"`
 	OrderServiceUrl   string `mapstructure:"ORDER_SVC_URL"`
 	Port              string `mapstructure:"PORT"`
+	JWT               string `mapstructure:"JWT_CODE"`
 }
 
 var envs = []string{"AUTH_SVC_URL",
-	"PRODUCT_SVC_URL", "CART_SVC_URL", "ORDER_SVC_URL", "PORT",
+	"PRODUCT_SVC_URL", "CART_SVC_URL", "ORDER_SVC_URL", "PORT", "JWT_CODE",
 }
+var config Config
 
 func LoadConfig() (config *Config, err error) {
 
@@ -29,4 +31,13 @@ func LoadConfig() (config *Config, err error) {
 	err = viper.Unmarshal(&config)
 
 	return
+}
+
+// func GetConfig() Config {
+// 	return config
+// }
+
+// to get the secret code for jwt
+func GetJWTConfig() string {
+	return config.JWT
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/ajujacob88/go-ecommerce-gin-clean-arch/pkg/model/response"
+	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/model/response"
 	"github.com/gin-gonic/gin"
 )
 

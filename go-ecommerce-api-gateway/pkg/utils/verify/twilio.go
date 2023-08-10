@@ -1,5 +1,6 @@
 package verify
 
+/*
 import (
 	"errors"
 
@@ -60,3 +61,5 @@ func TwilioVerifyOTP(phoneNumber string, code string) error {
 		return errors.New("verification check failed")
 	}
 }
+
+*/

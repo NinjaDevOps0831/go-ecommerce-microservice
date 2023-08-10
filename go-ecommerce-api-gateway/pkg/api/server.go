@@ -1,26 +1,21 @@
-package http
+package api
 
 import (
-	"github.com/ajujacob88/go-ecommerce-gin-clean-arch/pkg/api/handler"
-	"github.com/ajujacob88/go-ecommerce-gin-clean-arch/pkg/api/routes"
+	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/api/handler"
+	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/api/routes"
+	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/config"
+
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"honnef.co/go/tools/config"
 )
 
 type ServerHTTP struct {
-	engine *gin.Engine
+	Engine *gin.Engine
 	Port   string
 }
 
-func NewServerHTTP(cfg *config.Config, userHandler *handler.UserHandler,
-	adminHandler *handler.AdminHandler,
-	productHandler *handler.ProductHandler,
-	cartHandler *handler.CartHandler,
-	orderHandler *handler.OrderHandler,
-	paymentHandler *handler.PaymentHandler,
-	couponHandler *handler.CouponHandler,
+func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler,
 
 ) *ServerHTTP {
 
@@ -33,13 +28,13 @@ func NewServerHTTP(cfg *config.Config, userHandler *handler.UserHandler,
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	//setup routes
-	routes.UserRoutes(engine.Group("/"), userHandler, productHandler, cartHandler, orderHandler, paymentHandler, couponHandler)
-	routes.AdminRoutes(engine.Group("/admin"), adminHandler, productHandler, couponHandler, orderHandler)
+	routes.UserRoutes(engine.Group("/"), authHandler)
+	routes.AdminRoutes(engine.Group("/admin"), authHandler)
 
-	return &ServerHTTP{engine: engine, Port: cfg.Port}
+	return &ServerHTTP{Engine: engine, Port: cfg.Port}
 }
 
 func (sh *ServerHTTP) Start() {
-	sh.engine.LoadHTMLGlob("views/*.html") //for loading the html page of razor pay
-	sh.engine.Run(":3000")
+	sh.Engine.LoadHTMLGlob("views/*.html") //for loading the html page of razor pay
+	sh.Engine.Run(sh.Port)
 }
