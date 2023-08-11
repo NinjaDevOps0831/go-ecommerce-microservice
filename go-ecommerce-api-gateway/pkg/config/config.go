@@ -33,9 +33,9 @@ func LoadConfig() (config *Config, err error) {
 	return
 }
 
-// func GetConfig() Config {
-// 	return config
-// }
+func GetConfig() Config {
+	return config
+}
 
 // to get the secret code for jwt
 func GetJWTConfig() string {

@@ -1,6 +1,8 @@
 package api
 
 import (
+	"net/http"
+
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/api/handler"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/api/routes"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/config"
@@ -17,7 +19,7 @@ type ServerHTTP struct {
 
 func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler,
 
-) *ServerHTTP {
+) (*ServerHTTP, error) {
 
 	engine := gin.New()
 
@@ -31,7 +33,14 @@ func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler,
 	routes.UserRoutes(engine.Group("/"), authHandler)
 	routes.AdminRoutes(engine.Group("/admin"), authHandler)
 
-	return &ServerHTTP{Engine: engine, Port: cfg.Port}
+	engine.NoRoute(func(ctx *gin.Context) {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"StatusCode": 404,
+			"msg":        "invalid url",
+		})
+	})
+
+	return &ServerHTTP{Engine: engine, Port: cfg.Port}, nil
 }
 
 func (sh *ServerHTTP) Start() {
