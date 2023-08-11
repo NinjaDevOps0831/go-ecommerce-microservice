@@ -44,6 +44,6 @@ func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler,
 }
 
 func (sh *ServerHTTP) Start() {
-	sh.Engine.LoadHTMLGlob("views/*.html") //for loading the html page of razor pay
+	//sh.Engine.LoadHTMLGlob("views/*.html") //for loading the html page of razor pay
 	sh.Engine.Run(sh.Port)
 }
