@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/config"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/domain"
@@ -14,6 +15,9 @@ func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 	db, dbErr := gorm.Open(postgres.Open(psqlInfo), &gorm.Config{
 		SkipDefaultTransaction: true,
 	})
+	if dbErr != nil {
+		log.Fatalln(dbErr)
+	}
 
 	err := db.AutoMigrate(
 
@@ -28,31 +32,31 @@ func ConnectDatabase(cfg config.Config) (*gorm.DB, error) {
 		//admin tables
 		&domain.Admin{}, //By default, GORM automatically pluralizes the table name based on the struct name. That's why the Admin struct becomes the "admins" table.
 
-		//product tables
-		&domain.ProductCategory{},
-		&domain.Product{},
-		&domain.ProductBrand{},
-		&domain.ProductDetails{},
+		// //product tables
+		// &domain.ProductCategory{},
+		// &domain.Product{},
+		// &domain.ProductBrand{},
+		// &domain.ProductDetails{},
 
-		//cart tables
-		&domain.Carts{},
-		&domain.CartItems{},
+		// //cart tables
+		// &domain.Carts{},
+		// &domain.CartItems{},
 
-		//order tables
-		&domain.Order{},
-		&domain.OrderLine{},
-		&domain.OrderStatus{},
-		&domain.DeliveryStatus{},
-		&domain.OrderReturn{},
+		// //order tables
+		// &domain.Order{},
+		// &domain.OrderLine{},
+		// &domain.OrderStatus{},
+		// &domain.DeliveryStatus{},
+		// &domain.OrderReturn{},
 
-		//payment tables
-		&domain.PaymentMethodInfo{},
-		&domain.PaymentDetails{},
-		&domain.PaymentStatus{},
+		// //payment tables
+		// &domain.PaymentMethodInfo{},
+		// &domain.PaymentDetails{},
+		// &domain.PaymentStatus{},
 
-		//coupon table
-		&domain.Coupon{},
-		domain.CouponUsed{},
+		// //coupon table
+		// &domain.Coupon{},
+		// domain.CouponUsed{},
 	)
 
 	if err != nil {
