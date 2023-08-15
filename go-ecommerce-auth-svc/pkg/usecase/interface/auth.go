@@ -15,9 +15,9 @@ type AuthUseCase interface {
 
 	//	FindByEmail(ctx context.Context, Email string) (domain.Users, error)
 
-	AddAddress(ctx context.Context, userAddressInput request.UserAddressInput, userID int) (domain.UserAddress, error)
+	AddAddress(ctx context.Context, userAddressInput request.UserAddressInput, userID uint) (domain.UserAddress, error)
 
-	CreateAdmin(ctx context.Context, newAdmin request.NewAdminInfo, adminID int) (domain.Admin, error)
+	CreateAdmin(ctx context.Context, newAdmin request.NewAdminInfo, adminID uint) (domain.Admin, error)
 
 	AdminLogin(ctx context.Context, input request.AdminLoginInfo) (string, response.AdminDataOutput, error)
 }

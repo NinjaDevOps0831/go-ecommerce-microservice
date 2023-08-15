@@ -9,7 +9,9 @@ import (
 )
 
 type AuthRepository interface {
-	UserSignup(ctx context.Context, newUser request.NewUserInfo) (response.UserDataOutput, error)
+	FindUser(ctx context.Context, newUser request.NewUserInfo) (domain.Users, error)
+
+	UserSignUp(ctx context.Context, newUser request.NewUserInfo) (response.UserDataOutput, error)
 	//UserSignupOtpVerify(ctx context.Context, otpverify request.OTPVerify) (*pb.OtpVerifyResponse, error)
 	//UserLoginByEmail(ctx context.Context, body request.UserLoginEmail) (*pb.LoginResponse, error)
 
@@ -24,6 +26,9 @@ type AuthRepository interface {
 	//AuthorizationMiddleware(string) (*pb.ValidateResponse, error)
 
 	//Admin
+
+	IsSuperAdmin(ctx context.Context, adminID uint) (bool, error)
+
 	CreateAdmin(ctx context.Context, newAdminInfo request.NewAdminInfo) (domain.Admin, error)
 	//AdminLogin(ctx context.Context, body request.AdminLoginInfo) (*pb.AdminLoginResponse, error)
 	FindAdmin(ctx context.Context, email string) (domain.Admin, error)

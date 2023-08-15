@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/domain"
@@ -19,7 +20,19 @@ func NewAuthRepository(DB *gorm.DB) interfaces.AuthRepository {
 	return &authDatabase{DB}
 }
 
-func (c *authDatabase) UserSignup(ctx context.Context, newUser request.NewUserInfo) (response.UserDataOutput, error) {
+func (c *authDatabase) FindUser(ctx context.Context, newUser request.NewUserInfo) (domain.Users, error) {
+	// check email or phone match in database
+	var user domain.Users
+	fmt.Println("user is", newUser, "user.email is", newUser.Email)
+	query := `SELECT * FROM users WHERE email = ? OR phone = ?;`
+	if err := c.DB.Raw(query, newUser.Email, newUser.Phone).Scan(&user).Error; err != nil {
+		fmt.Println("fialed to get user")
+		return user, errors.New("failed to get the user")
+	}
+	return user, nil
+}
+
+func (c *authDatabase) UserSignUp(ctx context.Context, newUser request.NewUserInfo) (response.UserDataOutput, error) {
 	var userData response.UserDataOutput
 
 	//save the user details
@@ -110,4 +123,13 @@ func (c *authDatabase) FindAdmin(ctx context.Context, email string) (domain.Admi
 
 	err := c.DB.Raw(findAdminQuery, email).Scan(&adminData).Error
 	return adminData, err
+}
+
+func (c *authDatabase) IsSuperAdmin(ctx context.Context, adminID uint) (bool, error) {
+	var isSuperAdmin bool
+	superAdminCheckingQuery := `SELECT is_super_admin
+								FROM admins
+								WHERE id = $1` //In the SQL query string, the placeholder $1 indicates the position of the first parameter that will be passed when executing the query. In this case, the value of adminID is passed as the first parameter to the Raw method.
+	err := c.DB.Raw(superAdminCheckingQuery, adminID).Scan(&isSuperAdmin).Error //This line executes the SQL query using the DB.Raw method provided by the c.DB database connection. It scans the result into the isSuperAdmin variable using the &isSuperAdmin syntax. Any error that occurs during the execution is assigned to the err variable.
+	return isSuperAdmin, err
 }
