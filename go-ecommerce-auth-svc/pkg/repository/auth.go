@@ -56,6 +56,24 @@ func (c *authDatabase) UserSignUp(ctx context.Context, newUser request.NewUserIn
 	return userData, err
 }
 
+// OTPVerifyStatusManage method to update the verification status
+func (c *authDatabase) OTPVerifyStatusManage(ctx context.Context, otpsession domain.OTPSession) error {
+
+	//but here the mob_num is in users table and is verified is in userinfo table,
+
+	fmt.Println("otpsessiont is", otpsession.MobileNum, "otpsession without +91 is", otpsession.MobileNum[3:], "and", otpsession.OtpId)
+
+	err := c.DB.Exec(`UPDATE user_infos  SET is_verified = true WHERE users_id =  (
+		SELECT id
+	   FROM users
+	   WHERE phone = $1 )`, otpsession.MobileNum[3:]).Error
+
+	if err != nil {
+		return errors.New("failed to update OTP verification status")
+	}
+	return nil
+}
+
 func (c *authDatabase) FindByEmail(ctx context.Context, email string) (domain.Users, error) {
 	//var user domain.Users
 	// err := c.DB.Where("Email = ?", email).Find(&user).Error

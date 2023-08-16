@@ -11,6 +11,8 @@ import (
 type AuthUseCase interface {
 	UserSignUp(ctx context.Context, newUser request.NewUserInfo) (response.UserDataOutput, error)
 
+	OTPVerifyStatusManage(ctx context.Context, otpsession domain.OTPSession) error
+
 	LoginWithEmail(ctx context.Context, user request.UserLoginEmail) (domain.Users, error)
 
 	//	FindByEmail(ctx context.Context, Email string) (domain.Users, error)

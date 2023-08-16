@@ -15,6 +15,8 @@ type AuthRepository interface {
 	//UserSignupOtpVerify(ctx context.Context, otpverify request.OTPVerify) (*pb.OtpVerifyResponse, error)
 	//UserLoginByEmail(ctx context.Context, body request.UserLoginEmail) (*pb.LoginResponse, error)
 
+	OTPVerifyStatusManage(ctx context.Context, otpsession domain.OTPSession) error
+
 	FindByEmail(ctx context.Context, Email string) (domain.Users, error)
 
 	BlockStatus(ctx context.Context, userId uint) (bool, error)

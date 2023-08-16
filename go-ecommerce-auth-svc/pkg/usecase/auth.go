@@ -52,6 +52,12 @@ func (c *authUseCase) UserSignUp(ctx context.Context, newUser request.NewUserInf
 
 }
 
+// Manage the otp verify status of users
+func (c *authUseCase) OTPVerifyStatusManage(ctx context.Context, otpsession domain.OTPSession) error {
+	err := c.authRepo.OTPVerifyStatusManage(ctx, otpsession)
+	return err
+}
+
 // user login
 func (c *authUseCase) LoginWithEmail(ctx context.Context, user request.UserLoginEmail) (domain.Users, error) {
 
