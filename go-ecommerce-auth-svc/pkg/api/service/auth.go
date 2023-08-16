@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/auth"
@@ -62,9 +61,13 @@ func (cr *authServiceServer) UserSignup(ctx context.Context, req *pb.UserSignUpR
 
 }
 
-func (cr *authServiceServer) SignupOtpVerify(ctx context.Context, otpverify request.OTPVerify) (*pb.OtpVerifyResponse, error) {
+func (cr *authServiceServer) SignupOtpVerify(ctx context.Context, req *pb.OtpVerifyRequest) (*pb.OtpVerifyResponse, error) {
 	//var user domain.Users
 	//var otpverify request.OTPVerify
+	otpverify := request.OTPVerify{
+		OTP:   req.GetOtp(),
+		OtpId: req.GetOtpId(),
+	}
 
 	otpsession, err := cr.otpusecase.TwilioVerifyOTP(ctx, otpverify)
 	if err != nil {
@@ -91,9 +94,14 @@ func (cr *authServiceServer) SignupOtpVerify(ctx context.Context, otpverify requ
 	// c.JSON(200, response)
 }
 
-func (cr *authServiceServer) UserLoginByEmail(ctx context.Context, body request.UserLoginEmail) (*pb.LoginResponse, error) {
+func (cr *authServiceServer) UserLoginByEmail(ctx context.Context, req *pb.LoginRequest) (*pb.LoginResponse, error) {
 	//receive data from request body
 	//var body request.UserLoginEmail
+
+	body := request.UserLoginEmail{
+		Email:    req.GetEmail(),
+		Password: req.GetPassword(),
+	}
 
 	//copy the body values to user
 	var user domain.Users
@@ -126,7 +134,7 @@ func (cr *authServiceServer) UserLoginByEmail(ctx context.Context, body request.
 	// c.JSON(http.StatusOK, response)
 }
 
-func (cr *authServiceServer) AddAddress(ctx context.Context, userAddressInput request.UserAddressInput, userID uint) (*pb.AddUserAddressResponse, error) {
+func (cr *authServiceServer) AddAddress(ctx context.Context, req *pb.AddUserAddressRequest) (*pb.AddUserAddressResponse, error) {
 	//var userAddressInput request.UserAddressInput
 	// if err := c.Bind(&userAddressInput); err != nil {
 	// 	c.JSON(http.StatusUnprocessableEntity, response.ErrorResponse(422, "unable to read the request body", err.Error(), nil))
@@ -138,6 +146,18 @@ func (cr *authServiceServer) AddAddress(ctx context.Context, userAddressInput re
 	// 	c.JSON(http.StatusUnauthorized, response.ErrorResponse(400, "unable to fetch user id from context", err.Error(), nil))
 	// 	return
 	// }
+
+	userAddressInput := request.UserAddressInput{
+		HouseNumber: req.GetHouseNumber(),
+		Street:      req.GetStreet(),
+		City:        req.GetCity(),
+		District:    req.GetDistrict(),
+		State:       req.GetState(),
+		Pincode:     req.GetPincode(),
+		Landmark:    req.GetLandmark(),
+	}
+
+	userID := uint(req.GetUserid())
 
 	address, err := cr.authusecase.AddAddress(ctx, userAddressInput, userID)
 	if err != nil {
@@ -159,12 +179,21 @@ func (cr *authServiceServer) AddAddress(ctx context.Context, userAddressInput re
 
 }
 
-func (cr *authServiceServer) CreateAdmin(ctx context.Context, newAdminInfo request.NewAdminInfo, adminID uint32) (*pb.AdminSignupResponse, error) {
+func (cr *authServiceServer) CreateAdmin(ctx context.Context, req *pb.AdminSignupRequest) (*pb.AdminSignupResponse, error) {
 	//var newAdminInfo request.NewAdminInfo
 
 	//finding out the admin id of the admin who is trying to create the new user., if the admin is super admin, then only he can able to create a new admin.
 	//adminID, err := handlerutil.GetAdminIdFromContext(c)
-	fmt.Println("Admin ID is(for superuser check)", adminID)
+	//fmt.Println("Admin ID is(for superuser check)", adminID)
+
+	newAdminInfo := request.NewAdminInfo{
+		UserName: req.GetUserName(),
+		Email:    req.GetEmail(),
+		Phone:    req.GetPhone(),
+		Password: req.GetPassword(),
+	}
+
+	adminID := req.GetAdminID()
 
 	//Now call the create admin method from admin usecase. The admin data will be saved to domain.admin after the succesful execution of the function
 	newAdminOutput, err := cr.authusecase.CreateAdmin(ctx, newAdminInfo, uint(adminID))
@@ -186,9 +215,13 @@ func (cr *authServiceServer) CreateAdmin(ctx context.Context, newAdminInfo reque
 
 }
 
-func (cr *authServiceServer) AdminLogin(ctx context.Context, body request.AdminLoginInfo) (*pb.AdminLoginResponse, error) {
+func (cr *authServiceServer) AdminLogin(ctx context.Context, req *pb.LoginRequest) (*pb.AdminLoginResponse, error) {
 	//receive the data from request body
 	//var body request.AdminLoginInfo
+	body := request.AdminLoginInfo{
+		Email:    req.GetEmail(),
+		Password: req.GetPassword(),
+	}
 
 	//call the adminlogin method of the adminusecase to login as an admin
 	tokenString, adminDataInModel, err := cr.authusecase.AdminLogin(ctx, body)
