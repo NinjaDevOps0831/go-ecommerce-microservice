@@ -20,4 +20,7 @@ type AuthUseCase interface {
 	CreateAdmin(ctx context.Context, newAdmin request.NewAdminInfo, adminID uint) (domain.Admin, error)
 
 	AdminLogin(ctx context.Context, input request.AdminLoginInfo) (string, response.AdminDataOutput, error)
+
+	//TwilioSendOtp(ctx context.Context, phoneNumber string) (string, error)
+	//TwilioVerifyOTP(ctx context.Context, otpverify request.OTPVerify) (domain.OTPSession, error)
 }
