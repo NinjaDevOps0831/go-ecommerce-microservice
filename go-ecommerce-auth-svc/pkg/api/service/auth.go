@@ -5,9 +5,14 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/auth"
+	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/domain"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/model/request"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/pb"
 	services "github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/usecase/interface"
+	"github.com/gin-gonic/gin"
+
+	"github.com/jinzhu/copier"
 )
 
 type authServiceServer struct {
@@ -83,4 +88,72 @@ func (cr *authServiceServer) SignupOtpVerify(ctx context.Context, otpverify requ
 
 	// response := response.SuccessResponse(200, "OTP validation Successfull..Account Created Successfully", nil)
 	// c.JSON(200, response)
+}
+
+func (cr *authServiceServer) UserLoginByEmail(ctx context.Context, body request.UserLoginEmail) (*pb.LoginResponse, error) {
+	//receive data from request body
+	//var body request.UserLoginEmail
+
+	//copy the body values to user
+	var user domain.Users
+	copier.Copy(&user, &body)
+
+	// get user from database and check password in usecase
+	user, err := cr.authusecase.LoginWithEmail(ctx, body)
+	if err != nil {
+		return &pb.LoginResponse{Status: http.StatusBadRequest}, errors.New("failed to login")
+
+	}
+
+	// generate token using jwt in map
+	tokenString, err := auth.GenerateJWT(user.ID)
+	if err != nil {
+		return &pb.LoginResponse{Status: http.StatusInternalServerError}, errors.New("faild to generate jwt")
+
+	}
+	var c *gin.Context
+
+	c.SetCookie("UserAuth", tokenString, 60*60, "", "", false, true)
+
+	data := &pb.User{
+		FirstName: user.FirstName,
+	}
+	return &pb.LoginResponse{Status: http.StatusOK, User: data,
+		Token: tokenString}, nil
+
+	// response := response.SuccessResponse(200, "successfully logged in", user.FirstName)
+	// c.JSON(http.StatusOK, response)
+}
+
+func (cr *authServiceServer) AddAddress(ctx context.Context, userAddressInput request.UserAddressInput, userID uint) (*pb.AddUserAddressResponse, error) {
+	//var userAddressInput request.UserAddressInput
+	// if err := c.Bind(&userAddressInput); err != nil {
+	// 	c.JSON(http.StatusUnprocessableEntity, response.ErrorResponse(422, "unable to read the request body", err.Error(), nil))
+	// 	return
+	// }
+
+	// userID, err := handlerutil.GetUserIdFromContext(ctx)
+	// if err != nil {
+	// 	c.JSON(http.StatusUnauthorized, response.ErrorResponse(400, "unable to fetch user id from context", err.Error(), nil))
+	// 	return
+	// }
+
+	address, err := cr.authusecase.AddAddress(ctx, userAddressInput, userID)
+	if err != nil {
+		return &pb.AddUserAddressResponse{Status: http.StatusBadRequest}, errors.New("failed to add the address")
+
+	}
+
+	data := &pb.UserAddressOutput{
+		Id:          uint32(address.ID),
+		Userid:      uint32(address.UserID),
+		HouseNumber: address.HouseNumber,
+		Street:      address.Street,
+		City:        address.City,
+		District:    address.District,
+		State:       address.State,
+		Pincode:     address.Pincode,
+	}
+	return &pb.AddUserAddressResponse{Status: http.StatusCreated, UserAddressOutput: data}, errors.New("Succesfully added the address")
+
 }
