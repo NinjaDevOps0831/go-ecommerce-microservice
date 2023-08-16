@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/auth"
@@ -155,5 +156,57 @@ func (cr *authServiceServer) AddAddress(ctx context.Context, userAddressInput re
 		Pincode:     address.Pincode,
 	}
 	return &pb.AddUserAddressResponse{Status: http.StatusCreated, UserAddressOutput: data}, errors.New("Succesfully added the address")
+
+}
+
+func (cr *authServiceServer) CreateAdmin(ctx context.Context, newAdminInfo request.NewAdminInfo, adminID uint32) (*pb.AdminSignupResponse, error) {
+	//var newAdminInfo request.NewAdminInfo
+
+	//finding out the admin id of the admin who is trying to create the new user., if the admin is super admin, then only he can able to create a new admin.
+	//adminID, err := handlerutil.GetAdminIdFromContext(c)
+	fmt.Println("Admin ID is(for superuser check)", adminID)
+
+	//Now call the create admin method from admin usecase. The admin data will be saved to domain.admin after the succesful execution of the function
+	newAdminOutput, err := cr.authusecase.CreateAdmin(ctx, newAdminInfo, uint(adminID))
+
+	if err != nil {
+		return &pb.AdminSignupResponse{Status: http.StatusBadRequest}, errors.New("failed to create the admin")
+
+	}
+
+	data := &pb.Admin{
+		Id:           uint32(newAdminOutput.ID),
+		UserName:     newAdminOutput.UserName,
+		Email:        newAdminOutput.Email,
+		PhoneNo:      newAdminOutput.Phone,
+		IsSuperAdmin: newAdminOutput.IsBlocked,
+		IsBlocked:    newAdminOutput.IsBlocked,
+	}
+	return &pb.AdminSignupResponse{Status: http.StatusCreated, Admin: data}, nil
+
+}
+
+func (cr *authServiceServer) AdminLogin(ctx context.Context, body request.AdminLoginInfo) (*pb.AdminLoginResponse, error) {
+	//receive the data from request body
+	//var body request.AdminLoginInfo
+
+	//call the adminlogin method of the adminusecase to login as an admin
+	tokenString, adminDataInModel, err := cr.authusecase.AdminLogin(ctx, body)
+	if err != nil {
+		return &pb.AdminLoginResponse{Status: http.StatusBadRequest}, errors.New("failed to login")
+
+	}
+	var c *gin.Context
+	c.SetSameSite(http.SameSiteLaxMode) //sets the SameSite attribute of the cookie to "Lax" mode. It is a security measure that helps protect against certain types of cross-site request forgery (CSRF) attacks.
+	c.SetCookie("AdminAuth", tokenString, 3600*24*30, "", "", false, true)
+
+	data := &pb.AdminDataOutput{
+		Id:           uint32(adminDataInModel.ID),
+		UserName:     adminDataInModel.UserName,
+		Email:        adminDataInModel.Email,
+		Phone:        adminDataInModel.Phone,
+		IsSuperAdmin: adminDataInModel.IsSuperAdmin,
+	}
+	return &pb.AdminLoginResponse{Status: http.StatusOK, AdminDataOutput: data, Token: tokenString}, nil
 
 }
