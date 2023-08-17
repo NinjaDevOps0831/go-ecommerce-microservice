@@ -8,3 +8,4 @@
 # Ignore .env and .exe files in all folders and subfolders
 **/.env
 **/*.exe
+**/.envs
