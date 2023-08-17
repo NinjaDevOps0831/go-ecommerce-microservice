@@ -276,8 +276,9 @@ func (cr *AuthHandler) AdminLogin(c *gin.Context) {
 		c.JSON(http.StatusUnprocessableEntity, response.Response{StatusCode: 422, Message: "unable to process the request", Errors: err.Error(), Data: nil})
 		return
 	}
-	//call the adminlogin method of the adminusecase to login as an admin
-	res, err := cr.Client.AdminLogin(c.Request.Context(), body)
+	fmt.Println("debug test - body", body)
+
+	res, err := cr.Client.AdminLogin(context.Background(), body)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, response.ErrorResponse(400, "failed to login", err.Error(), nil))
 		return

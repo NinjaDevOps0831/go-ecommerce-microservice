@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/client/interfaces"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-api-gateway/pkg/config"
@@ -103,6 +104,7 @@ func (cr *authClient) AdminLogin(ctx context.Context, body request.AdminLoginInf
 		Email:    body.Email,
 		Password: body.Password,
 	})
+	fmt.Println("debug test admin login creds", res)
 
 	if err != nil {
 		return res, err
