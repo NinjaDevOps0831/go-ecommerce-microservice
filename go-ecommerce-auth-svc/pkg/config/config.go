@@ -1,6 +1,10 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"fmt"
+
+	"github.com/spf13/viper"
+)
 
 type Config struct {
 	Port string `mapstructure:"PORT"`
@@ -33,12 +37,17 @@ func LoadConfig() (config *Config, err error) {
 
 	for _, env := range envs {
 		if err = viper.BindEnv(env); err != nil {
-			return
+			fmt.Println("debug checkout  - error in config.go")
+			return config, err
 		}
 	}
-	err = viper.Unmarshal(&config)
+	if err := viper.Unmarshal(&config); err != nil {
+		fmt.Println("debug checkout  - error 2 in config.go")
+		return config, err
+	}
+	fmt.Println("Config is", config, "twilio authtoken is", config.AUTHTOKEN, "twilio acnt sid is", config.ACCOUNTSID, "twilio service sid is", config.SERVICESID)
 
-	return
+	return config, nil
 }
 
 func GetConfig() Config {

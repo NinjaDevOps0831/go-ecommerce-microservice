@@ -31,7 +31,7 @@ func (c *otpUseCase) TwilioSendOtp(ctx context.Context, phoneNumber string) (str
 	password := config.GetConfig().AUTHTOKEN
 	userName := config.GetConfig().ACCOUNTSID
 	seviceSid := config.GetConfig().SERVICESID
-	fmt.Println("debug test 8 - twilio otp.go: ", phoneNumber, password, userName, seviceSid)
+	fmt.Println("debug test 8 - twilio otp.go: ", phoneNumber, "twilio authtoken is", password, "twilio usernme is", userName, "twilio sid is", seviceSid)
 
 	client := twilio.NewRestClientWithParams(twilio.ClientParams{
 		Password: password,
