@@ -100,6 +100,7 @@ func (c *authUseCase) LoginWithEmail(ctx context.Context, user request.UserLogin
 func (c *authUseCase) AddAddress(ctx context.Context, userAddressInput request.UserAddressInput, userID uint) (domain.UserAddress, error) {
 
 	address, err := c.authRepo.AddAddress(ctx, userAddressInput, userID)
+	fmt.Println("debug check 1 usecase - address is", address, "err is", err)
 	return address, err
 
 }
@@ -119,6 +120,7 @@ func (c *authUseCase) CreateAdmin(ctx context.Context, newAdmin request.NewAdmin
 		return domain.Admin{}, err
 	}
 	newAdmin.Password = string(hash)
+	fmt.Println("debug test -2 - newadmin.pasword is", newAdmin.Password)
 	newAdminOutput, err := c.authRepo.CreateAdmin(ctx, newAdmin)
 	return newAdminOutput, err
 

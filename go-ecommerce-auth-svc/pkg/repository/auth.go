@@ -116,7 +116,7 @@ func (c *authDatabase) AddAddress(ctx context.Context, userAddressInput request.
 								user_id, house_number, street, city, district, state, pincode, landmark) 
 								VALUES($1,$2,$3,$4,$5,$6, $7, $8) RETURNING *`
 	err := c.DB.Raw(insertAddressQuery, userID, userAddressInput.HouseNumber, userAddressInput.Street, userAddressInput.City, userAddressInput.District, userAddressInput.State, userAddressInput.Pincode, userAddressInput.Landmark).Scan(&addedAddress).Error
-
+	fmt.Println("auth repo err is", err)
 	if err != nil {
 		return domain.UserAddress{}, err
 	}

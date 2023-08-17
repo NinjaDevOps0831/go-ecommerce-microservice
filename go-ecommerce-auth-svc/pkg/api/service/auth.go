@@ -11,7 +11,6 @@ import (
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/model/request"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/pb"
 	services "github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/usecase/interface"
-	"github.com/gin-gonic/gin"
 
 	"github.com/jinzhu/copier"
 )
@@ -30,7 +29,7 @@ func NewAuthServiceServer(usecase services.AuthUseCase, otpusecase services.OTPU
 }
 
 func (cr *authServiceServer) UserSignUp(ctx context.Context, req *pb.UserSignUpRequest) (*pb.UserSignUpResponse, error) {
-	fmt.Println("debug test -3 - req is", req)
+	//fmt.Println("debug test -3 - req is", req)
 	newUserInfo := request.NewUserInfo{
 		FirstName: req.GetFirstName(),
 		LastName:  req.GetLastName(),
@@ -38,7 +37,7 @@ func (cr *authServiceServer) UserSignUp(ctx context.Context, req *pb.UserSignUpR
 		Phone:     req.GetPhone(),
 		Password:  req.GetPassword(),
 	}
-	fmt.Println("debug test -4 - newuserinfo is", newUserInfo)
+	//fmt.Println("debug test -4 - newuserinfo is", newUserInfo)
 
 	userDetails, err := cr.authusecase.UserSignUp(ctx, newUserInfo)
 	if err != nil {
@@ -47,7 +46,7 @@ func (cr *authServiceServer) UserSignUp(ctx context.Context, req *pb.UserSignUpR
 		//c.JSON(http.StatusBadRequest, response.ErrorResponse(400, "failed to create user", err.Error(), nil))
 	}
 
-	fmt.Println("debug test -6 - userdetails is", userDetails)
+	//fmt.Println("debug test -6 - userdetails is", userDetails)
 
 	//twilio otp send
 
@@ -126,9 +125,9 @@ func (cr *authServiceServer) UserLoginByEmail(ctx context.Context, req *pb.Login
 		return &pb.LoginResponse{Status: http.StatusInternalServerError}, errors.New("faild to generate jwt")
 
 	}
-	var c *gin.Context
+	// var c *gin.Context
 
-	c.SetCookie("UserAuth", tokenString, 60*60, "", "", false, true)
+	// c.SetCookie("UserAuth", tokenString, 60*60, "", "", false, true)
 
 	data := &pb.User{
 		FirstName: user.FirstName,
@@ -167,7 +166,7 @@ func (cr *authServiceServer) AddAddress(ctx context.Context, req *pb.AddUserAddr
 
 	address, err := cr.authusecase.AddAddress(ctx, userAddressInput, userID)
 	if err != nil {
-		return &pb.AddUserAddressResponse{Status: http.StatusBadRequest}, errors.New("failed to add the address")
+		return &pb.AddUserAddressResponse{Status: http.StatusBadRequest}, errors.New("failed to add the addressss")
 
 	}
 
@@ -200,6 +199,7 @@ func (cr *authServiceServer) CreateAdmin(ctx context.Context, req *pb.AdminSignu
 	}
 
 	adminID := req.GetAdminID()
+	fmt.Println("debug test -1 - adminID is", adminID)
 
 	//Now call the create admin method from admin usecase. The admin data will be saved to domain.admin after the succesful execution of the function
 	newAdminOutput, err := cr.authusecase.CreateAdmin(ctx, newAdminInfo, uint(adminID))

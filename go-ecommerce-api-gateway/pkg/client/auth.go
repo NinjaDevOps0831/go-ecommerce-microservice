@@ -79,6 +79,7 @@ func (cr *authClient) AddAddress(ctx context.Context, userAddressInput request.U
 		Pincode:     userAddressInput.Pincode,
 		Landmark:    userAddressInput.Landmark,
 	})
+	fmt.Println("debug check client res is", res, "err is", err)
 
 	if err != nil {
 		return res, err
