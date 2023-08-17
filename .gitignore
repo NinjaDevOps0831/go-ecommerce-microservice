@@ -6,5 +6,5 @@
 # *.exe~
 
 # Ignore .env and .exe files in all folders and subfolders
-**/.envs
+**/.env
 **/*.exe
