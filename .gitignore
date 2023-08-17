@@ -1,6 +1,10 @@
-# Environment file
-.env
+# # Environment file
+# .env
 
-# Binaries for programs and plugins
-*.exe
-*.exe~
+# # Binaries for programs and plugins
+# *.exe
+# *.exe~
+
+# Ignore .env and .exe files in all folders and subfolders
+**/.env
+**/*.exe
