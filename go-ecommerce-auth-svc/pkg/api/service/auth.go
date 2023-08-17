@@ -29,7 +29,8 @@ func NewAuthServiceServer(usecase services.AuthUseCase, otpusecase services.OTPU
 	}
 }
 
-func (cr *authServiceServer) UserSignup(ctx context.Context, req *pb.UserSignUpRequest) (*pb.UserSignUpResponse, error) {
+func (cr *authServiceServer) UserSignUp(ctx context.Context, req *pb.UserSignUpRequest) (*pb.UserSignUpResponse, error) {
+	fmt.Println("debug test -3 - req is", req)
 	newUserInfo := request.NewUserInfo{
 		FirstName: req.GetFirstName(),
 		LastName:  req.GetLastName(),
@@ -37,12 +38,16 @@ func (cr *authServiceServer) UserSignup(ctx context.Context, req *pb.UserSignUpR
 		Phone:     req.GetPhone(),
 		Password:  req.GetPassword(),
 	}
+	fmt.Println("debug test -4 - newuserinfo is", newUserInfo)
 
 	userDetails, err := cr.authusecase.UserSignUp(ctx, newUserInfo)
 	if err != nil {
+		fmt.Println("debug test -5 - userdetails is", userDetails, "error is", err)
 		return &pb.UserSignUpResponse{Status: http.StatusBadRequest}, errors.New("failed to create user")
 		//c.JSON(http.StatusBadRequest, response.ErrorResponse(400, "failed to create user", err.Error(), nil))
 	}
+
+	fmt.Println("debug test -6 - userdetails is", userDetails)
 
 	//twilio otp send
 

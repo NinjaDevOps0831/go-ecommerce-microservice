@@ -23,9 +23,9 @@ func NewUserHandler(client client.AuthClient) AuthHandler {
 	}
 }
 
-// @title Ecommerce REST API
+// @title Ecommerce REST API Microservice
 // @version 1.0
-// @description Ecommerce REST API built using Go, PSQL, REST API following Clean Architecture.
+// @description Ecommerce REST API Microservice built using Go, PSQL, REST API following Clean Architecture.
 
 // @contact
 // name: Aju Jacob
@@ -72,6 +72,7 @@ func (cr *AuthHandler) UserSignUp(c *gin.Context) {
 
 	userDetails, err := cr.Client.UserSignup(context.Background(), newUserInfo)
 	if err != nil {
+		fmt.Println("debug check 1", userDetails)
 		c.JSON(http.StatusBadRequest, response.ErrorResponse(400, "failed to create user", err.Error(), nil))
 	}
 
@@ -85,7 +86,7 @@ func (cr *AuthHandler) UserSignUp(c *gin.Context) {
 	// 	return
 
 	// }
-	response := response.SuccessResponse(200, "Success: Enter the otp and the response id", userDetails.Responseid)
+	response := response.SuccessResponse(200, "Success: Enter the otp and the response id", userDetails)
 	c.JSON(http.StatusOK, response)
 
 }

@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/config"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/domain"
@@ -24,12 +25,13 @@ func NewOTPUseCase(otpRepo interfaces.OTPRepository) services.OTPUseCase {
 }
 
 func (c *otpUseCase) TwilioSendOtp(ctx context.Context, phoneNumber string) (string, error) {
-	//fmt.Println(phoneNumber, AUTHTOKEN, ACCOUNTSID, SERVICESID)
+	fmt.Println("debug test 7 - twilio otp.go: ", phoneNumber)
 
 	//create a twilio client with twilio details
 	password := config.GetConfig().AUTHTOKEN
 	userName := config.GetConfig().ACCOUNTSID
 	seviceSid := config.GetConfig().SERVICESID
+	fmt.Println("debug test 8 - twilio otp.go: ", phoneNumber, password, userName, seviceSid)
 
 	client := twilio.NewRestClientWithParams(twilio.ClientParams{
 		Password: password,
@@ -40,6 +42,7 @@ func (c *otpUseCase) TwilioSendOtp(ctx context.Context, phoneNumber string) (str
 	params.SetChannel("sms")
 
 	resp, err := client.VerifyV2.CreateVerification(seviceSid, params)
+	fmt.Println("debug test 9 - twilio otp.go - resp: ", resp)
 	if err != nil {
 		return *resp.Sid, err
 	}

@@ -1,0 +1,292 @@
+definitions:
+  request.AdminLoginInfo:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  request.NewAdminInfo:
+    properties:
+      email:
+        description: Email    string `json:"email" validate:"required,email"`
+        type: string
+      password:
+        type: string
+      phone:
+        maxLength: 10
+        minLength: 10
+        type: string
+      user_name:
+        type: string
+    required:
+    - email
+    - password
+    - phone
+    - user_name
+    type: object
+  request.NewUserInfo:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        description: |-
+          Email    string `json:"email" `
+          Phone    string `json:"phone" `
+        type: string
+      phone:
+        maxLength: 10
+        minLength: 10
+        type: string
+    required:
+    - email
+    - password
+    - phone
+    type: object
+  request.OTPVerify:
+    properties:
+      otp:
+        type: string
+      otpid:
+        type: string
+    required:
+    - otp
+    - otpid
+    type: object
+  request.UserAddressInput:
+    properties:
+      city:
+        type: string
+      district:
+        type: string
+      house_number:
+        type: string
+      landmark:
+        type: string
+      pincode:
+        type: string
+      state:
+        type: string
+      street:
+        type: string
+    type: object
+  request.UserLoginEmail:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  response.Response:
+    properties:
+      data: {}
+      errors: {}
+      message:
+        type: string
+      status_code:
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: Ecommerce REST API Microservice built using Go, PSQL, REST API following
+    Clean Architecture.
+  title: Ecommerce REST API Microservice
+  version: "1.0"
+paths:
+  /admin/admins:
+    post:
+      consumes:
+      - application/json
+      description: Super admin can create a new admin from admin panel
+      operationId: create-admin
+      parameters:
+      - description: New Admin Details
+        in: body
+        name: admin_details
+        required: true
+        schema:
+          $ref: '#/definitions/request.NewAdminInfo'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Create a new admin from admin panel
+      tags:
+      - Admin
+  /admin/login:
+    post:
+      consumes:
+      - application/json
+      description: Admin Login forthe admin review
+      operationId: admin-login
+      parameters:
+      - description: Admin Login Credentials
+        in: body
+        name: admin_credentials
+        required: true
+        schema:
+          $ref: '#/definitions/request.AdminLoginInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Admin Login for the admin
+      tags:
+      - Admin
+  /user/addresses/:
+    post:
+      consumes:
+      - application/json
+      description: Add address
+      operationId: add-address
+      parameters:
+      - description: User address
+        in: body
+        name: user_address
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserAddressInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: User can add the user address
+      tags:
+      - user
+  /user/login/email:
+    post:
+      consumes:
+      - application/json
+      description: user Login
+      operationId: user-login
+      parameters:
+      - description: user Login Credentials
+        in: body
+        name: user_credentials
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserLoginEmail'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: User Login
+      tags:
+      - user
+  /user/signup:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with the specified details.
+      operationId: Signup-user
+      parameters:
+      - description: New user Details
+        in: body
+        name: user_details
+        required: true
+        schema:
+          $ref: '#/definitions/request.NewUserInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: api for Signup a new user
+      tags:
+      - Users Signup
+  /user/signup/otp/verify:
+    post:
+      consumes:
+      - application/json
+      description: verify the otp of a user.
+      operationId: Signup-otpverify-user
+      parameters:
+      - description: OTP verification details
+        in: body
+        name: otpverify
+        required: true
+        schema:
+          $ref: '#/definitions/request.OTPVerify'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: signup otp verification
+      tags:
+      - Users otp verify
+swagger: "2.0"

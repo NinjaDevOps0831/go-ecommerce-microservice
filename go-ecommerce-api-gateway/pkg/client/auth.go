@@ -30,6 +30,7 @@ func NewAuthClient(cfg *config.Config) (interfaces.AuthClient, error) {
 }
 
 func (cr *authClient) UserSignup(ctx context.Context, newUserInfo request.NewUserInfo) (*pb.UserSignUpResponse, error) {
+	fmt.Println("debug test 2 - newuserinfo", newUserInfo)
 	res, err := cr.client.UserSignUp(ctx, &pb.UserSignUpRequest{
 		FirstName: newUserInfo.FirstName,
 		LastName:  newUserInfo.LastName,
@@ -37,6 +38,7 @@ func (cr *authClient) UserSignup(ctx context.Context, newUserInfo request.NewUse
 		Phone:     newUserInfo.Phone,
 		Password:  newUserInfo.Password,
 	})
+	fmt.Println("debug test 3 - res", res)
 	if err != nil {
 		return res, err
 	}
@@ -104,7 +106,7 @@ func (cr *authClient) AdminLogin(ctx context.Context, body request.AdminLoginInf
 		Email:    body.Email,
 		Password: body.Password,
 	})
-	fmt.Println("debug test admin login creds", res)
+	fmt.Println("debug test 2 - admin login creds", res)
 
 	if err != nil {
 		return res, err

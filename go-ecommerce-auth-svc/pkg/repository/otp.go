@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/domain"
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/model/request"
@@ -25,6 +26,7 @@ func (c otpDatabase) SaveOTP(ctx context.Context, resp string, phoneNumber strin
 		OtpId:     resp,
 		MobileNum: phoneNumber,
 	}
+	fmt.Println("debug test 10 - save otp - otp repo - : ", otpsession)
 
 	err := c.DB.Create(&otpsession).Error
 	return err
