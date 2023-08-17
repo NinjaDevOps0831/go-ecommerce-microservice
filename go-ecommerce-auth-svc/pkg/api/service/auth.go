@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/auth"
@@ -223,15 +224,19 @@ func (cr *authServiceServer) AdminLogin(ctx context.Context, req *pb.LoginReques
 		Password: req.GetPassword(),
 	}
 
+	fmt.Println("debug test -3 - body is", body)
+
 	//call the adminlogin method of the adminusecase to login as an admin
 	tokenString, adminDataInModel, err := cr.authusecase.AdminLogin(ctx, body)
 	if err != nil {
+		fmt.Println("debug test -4 - err is", err)
 		return &pb.AdminLoginResponse{Status: http.StatusBadRequest}, errors.New("failed to login")
 
 	}
-	var c *gin.Context
-	c.SetSameSite(http.SameSiteLaxMode) //sets the SameSite attribute of the cookie to "Lax" mode. It is a security measure that helps protect against certain types of cross-site request forgery (CSRF) attacks.
-	c.SetCookie("AdminAuth", tokenString, 3600*24*30, "", "", false, true)
+	fmt.Println("debug test -5 - tokenstring is", tokenString)
+	// var c *gin.Context
+	// c.SetSameSite(http.SameSiteLaxMode) //sets the SameSite attribute of the cookie to "Lax" mode. It is a security measure that helps protect against certain types of cross-site request forgery (CSRF) attacks.
+	// c.SetCookie("AdminAuth", tokenString, 3600*24*30, "", "", false, true)
 
 	data := &pb.AdminDataOutput{
 		Id:           uint32(adminDataInModel.ID),
