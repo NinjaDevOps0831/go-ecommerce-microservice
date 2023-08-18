@@ -163,6 +163,7 @@ func (cr *authServiceServer) AddAddress(ctx context.Context, req *pb.AddUserAddr
 	}
 
 	userID := uint(req.GetUserid())
+	fmt.Println("add address dubug check 4 - service - useraddresinp", userAddressInput, "userid", userID)
 
 	address, err := cr.authusecase.AddAddress(ctx, userAddressInput, userID)
 	if err != nil {
@@ -180,7 +181,7 @@ func (cr *authServiceServer) AddAddress(ctx context.Context, req *pb.AddUserAddr
 		State:       address.State,
 		Pincode:     address.Pincode,
 	}
-	return &pb.AddUserAddressResponse{Status: http.StatusCreated, UserAddressOutput: data}, errors.New("Succesfully added the address")
+	return &pb.AddUserAddressResponse{Status: http.StatusCreated, UserAddressOutput: data}, nil
 
 }
 
