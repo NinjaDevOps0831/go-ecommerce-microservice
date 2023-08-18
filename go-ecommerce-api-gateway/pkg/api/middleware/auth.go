@@ -21,7 +21,7 @@ func ValidateToken2(tokenString string) (int, error) {
 			return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 		}
 		//retrieve the secret key which is stored in the env signing the string
-		return []byte(config.GetJWTConfig()), nil
+		return []byte(config.GetConfig().JWT), nil
 	})
 	if err != nil {
 		return 0, err

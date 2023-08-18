@@ -206,7 +206,7 @@ func (cr *authServiceServer) CreateAdmin(ctx context.Context, req *pb.AdminSignu
 	newAdminOutput, err := cr.authusecase.CreateAdmin(ctx, newAdminInfo, uint(adminID))
 
 	if err != nil {
-		return &pb.AdminSignupResponse{Status: http.StatusBadRequest}, errors.New("failed to create the admin")
+		return &pb.AdminSignupResponse{Status: http.StatusBadRequest}, err
 
 	}
 

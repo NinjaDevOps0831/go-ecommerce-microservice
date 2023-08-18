@@ -155,8 +155,11 @@ func (c *authUseCase) AdminLogin(ctx context.Context, input request.AdminLoginIn
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	tokenString, err := token.SignedString([]byte(config.GetJWTConfig()))
+	fmt.Println("login debug 1- admin login - usecase - getconfig.jwt", []byte(config.GetConfig().JWT))
 
+	tokenString, err := token.SignedString([]byte(config.GetConfig().JWT))
+
+	fmt.Println("login debug 2- admin login - usecase - tokenstring", tokenString)
 	//send back the created token
 
 	//copying admin data from admindomain(from database table) to admin model struct

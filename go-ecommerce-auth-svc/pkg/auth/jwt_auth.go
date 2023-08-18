@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-auth-svc/pkg/config"
@@ -20,7 +21,9 @@ func GenerateJWT(id uint) (string, error) {
 
 	// Sign and get the complete encoded token as a string using the secret
 	//This signs the token using the specified secret key and returns a string representation of the complete, signed token.
-	tokenString, err := token.SignedString([]byte(config.GetJWTConfig()))
+	tokenString, err := token.SignedString([]byte(config.GetConfig().JWT))
+
+	fmt.Println("login debug 3- admin login - generate jwt - tokenstring", tokenString)
 	if err != nil {
 		return "", err
 	}

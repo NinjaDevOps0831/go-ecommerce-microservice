@@ -14,9 +14,9 @@ type Config struct {
 var envs = []string{"AUTH_SVC_URL",
 	"PRODUCT_SVC_URL", "CART_SVC_URL", "ORDER_SVC_URL", "PORT", "JWT_CODE",
 }
-var config Config
+var config *Config
 
-func LoadConfig() (config *Config, err error) {
+func LoadConfig() (*Config, error) {
 
 	viper.AddConfigPath("./")
 	viper.SetConfigFile(".env")
@@ -24,20 +24,21 @@ func LoadConfig() (config *Config, err error) {
 	viper.ReadInConfig()
 
 	for _, env := range envs {
-		if err = viper.BindEnv(env); err != nil {
-			return
+		if err := viper.BindEnv(env); err != nil {
+			return nil, err
 		}
 	}
-	err = viper.Unmarshal(&config)
-
-	return
+	if err := viper.Unmarshal(&config); err != nil {
+		return nil, err
+	}
+	return config, nil
 }
 
 func GetConfig() Config {
-	return config
+	return *config
 }
 
 // to get the secret code for jwt
-func GetJWTConfig() string {
-	return config.JWT
-}
+// func GetJWTConfig() string {
+// 	return config.JWT
+// }
