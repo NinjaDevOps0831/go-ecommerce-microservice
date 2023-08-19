@@ -25,7 +25,12 @@ func InitializeAPI(cfg config.Config) (*api.ServerHTTP, error) {
 		return nil, err
 	}
 	authHandler := handler.NewUserHandler(authClient)
-	serverHTTP, err := api.NewServerHTTP(configConfig, authHandler)
+	productClient, err := client.NewProductClient(configConfig)
+	if err != nil {
+		return nil, err
+	}
+	productHandler := handler.NewProductHandler(productClient)
+	serverHTTP, err := api.NewServerHTTP(configConfig, authHandler, productHandler)
 	if err != nil {
 		return nil, err
 	}

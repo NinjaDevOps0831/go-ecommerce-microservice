@@ -43,7 +43,7 @@ func (cr *ProductHandler) CreateCategory(c *gin.Context) {
 		return
 	}
 	//  call the createcategory usecase to create a new category
-	createdCategory, err := cr.client.CreateCategory(c.Request.Context(), category.CategoryName)
+	createdCategory, err := cr.client.CreateCategory(c.Request.Context(), category)
 	if err != nil {
 		c.JSON(http.StatusUnprocessableEntity, response.ErrorResponse(400, "failed to create new category", err.Error(), nil))
 		return

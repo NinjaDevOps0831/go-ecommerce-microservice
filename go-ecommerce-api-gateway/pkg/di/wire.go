@@ -24,8 +24,10 @@ func InitializeAPI(cfg config.Config) (*api.ServerHTTP, error) {
 		ProvideConfig, //this provide config func was written as suggested by chatgpt while encountered an error in running wire
 
 		client.NewAuthClient,
+		client.NewProductClient,
 
 		handler.NewUserHandler,
+		handler.NewProductHandler,
 
 		//server connection
 		api.NewServerHTTP,
