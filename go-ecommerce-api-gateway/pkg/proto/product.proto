@@ -4,11 +4,11 @@ package pb;
 option go_package = "./pkg/pb";
 
 service ProductService {
-    rpc CreateCategory (CreateCategoryRequest) return (CreateCategoryResponse){}
-    rpc CreateBrand (CreateBrandRequest) return (CreateBrandResponse){}
-    rpc CreateProduct (CreateProductRequest) return (CreateProductResponse){}
-    rpc ListAllProducts (ListAllProductsRequest) return (ListAllProductsResponse){}
-    rpc AddProductDetails (AddProductDetailsRequest) return (AddProductDetailsResponse){}
+    rpc CreateCategory (CreateCategoryRequest) returns (CreateCategoryResponse){}
+    rpc CreateBrand (CreateBrandRequest) returns (CreateBrandResponse){}
+    rpc CreateProduct (CreateProductRequest) returns (CreateProductResponse){}
+    rpc ListAllProducts (ListAllProductsRequest) returns (ListAllProductsResponse){}
+    rpc AddProductDetails (AddProductDetailsRequest) returns (AddProductDetailsResponse){}
 
 }
 //Field Naming: In protocol buffers, field names usually follow the lowerCamelCase convention, where the first letter of the field name is lowercase. 
@@ -64,16 +64,16 @@ message CreatedProduct {
 message CreateProductResponse{
     int32 status = 1;
     string response=2;
-    createdProduct created_product = 3;
+    CreatedProduct created_product = 3;
 }
 
 
 
 message ListAllProductsRequest{
     uint32 page = 1; 
-    string limit = 2;
-    uint32 sort_by = 3;
-    string sort_by = 4;    
+    uint32 limit = 2;
+    string sort_by = 3;
+    bool sort_by_desc = 4;    
 }
 
 message AllProducts {    
@@ -94,7 +94,7 @@ message ListAllProductsResponse{
 
 
 message AddProductDetailsRequest{
-    uint product_id = 1; 
+    uint32 product_id = 1; 
     string model_no = 2;
     string processor = 3;
     string storage = 4;    
@@ -104,14 +104,14 @@ message AddProductDetailsRequest{
     string color = 8;    
     string os = 9; 
     string sku = 10;
-    int qty_in_stock = 11;
-    float64 price = 12;   
+    int32 qty_in_stock = 11;
+    double price = 12;   
     string product_item_image = 13;     
 }
 
 message AddedProdDetails {    
-    uint id = 1; 
-    uint product_id = 2;
+    uint32 id = 1; 
+    uint32 product_id = 2;
     string model_no = 3;
     string processor = 4;    
     string storage = 5; 
@@ -121,8 +121,8 @@ message AddedProdDetails {
     string color = 9; 
     string os = 10;
     string sku = 11;
-    int qty_in_stock = 12;   
-    float64 price = 13;    
+    int32 qty_in_stock = 12;   
+    double price = 13;    
     string product_details_image = 14;   
 }
 
