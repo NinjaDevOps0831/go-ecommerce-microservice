@@ -10,7 +10,7 @@ import (
 func UserRoutes(
 	api *gin.RouterGroup,
 	authHandler handler.AuthHandler,
-	// productHandler handler.ProductHandler,
+	productHandler handler.ProductHandler,
 	// cartHandler handler.CartHandler,
 	// orderHandler handler.OrderHandler,
 
@@ -24,10 +24,10 @@ func UserRoutes(
 		signup.POST("/signup/otp/verify", authHandler.SignupOtpVerify)
 	}
 
-	// products := api.Group("/user")
-	// {
-	// 	products.GET("/products", productHandler.ListAllProducts)
-	// }
+	products := api.Group("/user")
+	{
+		products.GET("/products", productHandler.ListAllProducts)
+	}
 
 	login := api.Group("/user")
 	{

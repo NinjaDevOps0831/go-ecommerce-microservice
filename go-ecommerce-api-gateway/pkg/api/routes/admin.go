@@ -9,7 +9,7 @@ import (
 func AdminRoutes(
 	api *gin.RouterGroup,
 	authHandler handler.AuthHandler,
-	// productHandler handler.ProductHandler,
+	productHandler handler.ProductHandler,
 	// couponHandler handler.CouponHandler,
 	// orderHandler handler.OrderHandler,
 
@@ -39,31 +39,31 @@ func AdminRoutes(
 		}
 
 		// //category management routes
-		// categoryRoutes := api.Group("/categories")
-		// {
-		// 	categoryRoutes.POST("/", productHandler.CreateCategory)
-		// 	categoryRoutes.GET("/", productHandler.ListAllCategories)
-		// 	categoryRoutes.GET("/:id", productHandler.FindCategoryByID)
-		// 	categoryRoutes.PUT("/", productHandler.UpdateCategory)
-		// 	categoryRoutes.DELETE("/:id", productHandler.DeleteCategory)
-		// }
+		categoryRoutes := api.Group("/categories")
+		{
+			categoryRoutes.POST("/", productHandler.CreateCategory)
+			// 	categoryRoutes.GET("/", productHandler.ListAllCategories)
+			// 	categoryRoutes.GET("/:id", productHandler.FindCategoryByID)
+			// 	categoryRoutes.PUT("/", productHandler.UpdateCategory)
+			// 	categoryRoutes.DELETE("/:id", productHandler.DeleteCategory)
+		}
 
 		// //brand management routes
-		// brandRoutes := api.Group("/brands")
-		// {
-		// 	brandRoutes.POST("/", productHandler.CreateBrand)
+		brandRoutes := api.Group("/brands")
+		{
+			brandRoutes.POST("/", productHandler.CreateBrand)
 
-		// }
+		}
 
-		// //product management routes
-		// productRoutes := api.Group("/products")
-		// {
-		// 	productRoutes.POST("/", productHandler.CreateProduct)
-		// 	productRoutes.GET("/", productHandler.ListAllProducts)
-		// 	productRoutes.GET("/:id", productHandler.FindProductByID)
-		// 	productRoutes.PUT("/", productHandler.UpdateProduct)
-		// 	productRoutes.DELETE("/:id", productHandler.DeleteProduct)
-		// }
+		//product management routes
+		productRoutes := api.Group("/products")
+		{
+			productRoutes.POST("/", productHandler.CreateProduct)
+			productRoutes.GET("/", productHandler.ListAllProducts)
+			// productRoutes.GET("/:id", productHandler.FindProductByID)
+			// productRoutes.PUT("/", productHandler.UpdateProduct)
+			// productRoutes.DELETE("/:id", productHandler.DeleteProduct)
+		}
 
 		// //product details routes
 		// productDetails := api.Group("/product-details")

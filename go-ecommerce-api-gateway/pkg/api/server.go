@@ -17,7 +17,7 @@ type ServerHTTP struct {
 	Port   string
 }
 
-func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler,
+func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler, productHandler handler.ProductHandler,
 
 ) (*ServerHTTP, error) {
 
@@ -30,8 +30,8 @@ func NewServerHTTP(cfg *config.Config, authHandler handler.AuthHandler,
 	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	//setup routes
-	routes.UserRoutes(engine.Group("/"), authHandler)
-	routes.AdminRoutes(engine.Group("/admin"), authHandler)
+	routes.UserRoutes(engine.Group("/"), authHandler, productHandler)
+	routes.AdminRoutes(engine.Group("/admin"), authHandler, productHandler)
 
 	engine.NoRoute(func(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{
