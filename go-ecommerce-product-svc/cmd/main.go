@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-product-svc/pkg/config"
+	"github.com/ajujacob88/go-ecommerce-microservice-clean-arch/go-ecommerce-product-svc/pkg/di"
 )
 
 func main() {
