@@ -15,7 +15,7 @@ type productUseCase struct {
 	productRepo interfaces.ProductRepository
 }
 
-func NewUserUseCase(repo interfaces.ProductRepository) services.ProductUseCase {
+func NewProductUseCase(repo interfaces.ProductRepository) services.ProductUseCase {
 	return &productUseCase{
 		productRepo: repo,
 	}
