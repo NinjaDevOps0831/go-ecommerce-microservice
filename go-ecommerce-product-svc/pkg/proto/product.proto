@@ -1,0 +1,133 @@
+syntax= "proto3";
+
+package pb;
+option go_package = "./pkg/pb";
+
+service ProductService {
+    rpc CreateCategory (CreateCategoryRequest) returns (CreateCategoryResponse){}
+    rpc CreateBrand (CreateBrandRequest) returns (CreateBrandResponse){}
+    rpc CreateProduct (CreateProductRequest) returns (CreateProductResponse){}
+    rpc ListAllProducts (ListAllProductsRequest) returns (ListAllProductsResponse){}
+    rpc AddProductDetails (AddProductDetailsRequest) returns (AddProductDetailsResponse){}
+
+}
+//Field Naming: In protocol buffers, field names usually follow the lowerCamelCase convention, where the first letter of the field name is lowercase. 
+
+message CreateCategoryRequest {
+    string category_name = 1;    
+}
+
+message ProductCategoryOutput {    
+    uint32 id =1;    
+    string category_name=2;
+}
+
+message CreateCategoryResponse {
+    int32 status = 1;
+    string response=2;
+    ProductCategoryOutput product_category_output = 3;
+}
+
+message CreateBrandRequest{
+    string brand_name = 1; 
+}
+
+message ProductBrandOutput {    
+    uint32 id =1;    
+    string brand_name=2;
+}
+
+message CreateBrandResponse{
+    int32 status = 1;
+    string response=2;
+    ProductBrandOutput product_brand_output = 3;
+}
+
+
+message CreateProductRequest{
+    uint32 product_category_id = 1; 
+    string name = 2;
+    uint32 brand_id = 3;
+    string description = 4;
+    string product_image = 5;
+}
+
+message CreatedProduct {    
+    uint32 id =1;    
+    uint32 product_category_id = 2; 
+    string name = 3;
+    uint32 brand_id = 4;
+    string description = 5;
+    string product_image = 6;
+}
+
+message CreateProductResponse{
+    int32 status = 1;
+    string response=2;
+    CreatedProduct created_product = 3;
+}
+
+
+
+message ListAllProductsRequest{
+    uint32 page = 1; 
+    uint32 limit = 2;
+    string sort_by = 3;
+    bool sort_by_desc = 4;    
+}
+
+message AllProducts {    
+    uint32 product_details_id =1;    
+    string name = 2; 
+    string brand_name = 3;
+    string model_no = 4;
+    float price = 5;
+    string description = 6;
+    string product_image = 7;
+}
+
+message ListAllProductsResponse{
+    int32 status = 1;
+    string response=2;
+    repeated AllProducts all_products = 3;
+}
+
+
+message AddProductDetailsRequest{
+    uint32 product_id = 1; 
+    string model_no = 2;
+    string processor = 3;
+    string storage = 4;    
+    string ram = 5; 
+    string graphics_card = 6;
+    string display_size = 7;
+    string color = 8;    
+    string os = 9; 
+    string sku = 10;
+    int32 qty_in_stock = 11;
+    double price = 12;   
+    string product_item_image = 13;     
+}
+
+message AddedProdDetails {    
+    uint32 id = 1; 
+    uint32 product_id = 2;
+    string model_no = 3;
+    string processor = 4;    
+    string storage = 5; 
+    string ram = 6;
+    string graphics_card = 7;
+    string display_size = 8;    
+    string color = 9; 
+    string os = 10;
+    string sku = 11;
+    int32 qty_in_stock = 12;   
+    double price = 13;    
+    string product_details_image = 14;   
+}
+
+message AddProductDetailsResponse{
+    int32 status = 1;
+    string response=2;
+    AddedProdDetails added_product_details = 3;
+}
