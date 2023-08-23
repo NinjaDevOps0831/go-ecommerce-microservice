@@ -36,7 +36,7 @@ func (cr *productServiceServer) CreateCategory(ctx context.Context, req *pb.Crea
 		Id:           uint32(createdCategory.ID),
 		CategoryName: createdCategory.CategoryName,
 	}
-	return &pb.CreateCategoryResponse{Status: http.StatusCreated, Response: "Category Created Succesfully", ProductCategoryOutput: data}, nil
+	return &pb.CreateCategoryResponse{Status: http.StatusCreated, Response: "Category Created Succesfullyy", ProductCategoryOutput: data}, nil
 
 }
 
