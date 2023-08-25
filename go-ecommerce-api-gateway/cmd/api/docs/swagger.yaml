@@ -1,4 +1,30 @@
 definitions:
+  domain.Product:
+    properties:
+      brand_id:
+        type: integer
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      product_category_id:
+        type: integer
+      product_image:
+        type: string
+    required:
+    - brand_id
+    - name
+    - product_category_id
+    type: object
+  domain.ProductBrand:
+    properties:
+      brand_name:
+        type: string
+      id:
+        type: integer
+    type: object
   request.AdminLoginInfo:
     properties:
       email:
@@ -27,6 +53,51 @@ definitions:
     - password
     - phone
     - user_name
+    type: object
+  request.NewCategory:
+    properties:
+      category_name:
+        type: string
+    type: object
+  request.NewProductDetails:
+    properties:
+      color:
+        type: string
+      display_size:
+        type: string
+      graphics_card:
+        type: string
+      model_no:
+        type: string
+      os:
+        type: string
+      price:
+        type: number
+      processor:
+        type: string
+      product_id:
+        type: integer
+      product_item_image:
+        type: string
+      qty_in_stock:
+        type: integer
+      ram:
+        type: string
+      sku:
+        type: string
+      storage:
+        type: string
+    required:
+    - color
+    - display_size
+    - model_no
+    - os
+    - price
+    - processor
+    - product_id
+    - qty_in_stock
+    - sku
+    - storage
     type: object
   request.NewUserInfo:
     properties:
@@ -134,6 +205,68 @@ paths:
       summary: Create a new admin from admin panel
       tags:
       - Admin
+  /admin/brands:
+    post:
+      consumes:
+      - application/json
+      description: Admins can create new brands from the admin panel
+      operationId: create-brand
+      parameters:
+      - description: New brand name
+        in: body
+        name: brand_name
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ProductBrand'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Admin can create new product brand
+      tags:
+      - Product Brand
+  /admin/categories:
+    post:
+      consumes:
+      - application/json
+      description: Admins can create new categories from the admin panel
+      operationId: create-category
+      parameters:
+      - description: New category name
+        in: body
+        name: category_name
+        required: true
+        schema:
+          $ref: '#/definitions/request.NewCategory'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Create new product category
+      tags:
+      - Product Category
   /admin/login:
     post:
       consumes:
@@ -165,6 +298,104 @@ paths:
       summary: Admin Login for the admin
       tags:
       - Admin
+  /admin/product-details/:
+    post:
+      consumes:
+      - application/json
+      description: This endpoint allows an admin user to add the product details.
+      operationId: add-product-details
+      parameters:
+      - description: Product details
+        in: body
+        name: product_details
+        required: true
+        schema:
+          $ref: '#/definitions/request.NewProductDetails'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Add a product details
+      tags:
+      - Product Details
+  /admin/products:
+    get:
+      consumes:
+      - application/json
+      description: Admins and users can list all products
+      parameters:
+      - description: Number of items to retrieve per page
+        in: query
+        name: limit
+        type: integer
+      - description: Enter the page no to display
+        in: query
+        name: page
+        type: integer
+      - description: sorting criteria for showing the products
+        in: query
+        name: sort_by
+        type: string
+      - description: sorting in descending order
+        in: query
+        name: sort_desc
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: List All products
+      tags:
+      - Products
+  /admin/products/:
+    post:
+      consumes:
+      - application/json
+      description: Admins can create new product listings
+      operationId: create-product
+      parameters:
+      - description: new product details
+        in: body
+        name: new_product_details
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Product'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: Admin can create new product listings
+      tags:
+      - Products
   /user/addresses/:
     post:
       consumes:
@@ -227,6 +458,42 @@ paths:
       summary: User Login
       tags:
       - user
+  /user/products:
+    get:
+      consumes:
+      - application/json
+      description: Admins and users can list all products
+      parameters:
+      - description: Number of items to retrieve per page
+        in: query
+        name: limit
+        type: integer
+      - description: Enter the page no to display
+        in: query
+        name: page
+        type: integer
+      - description: sorting criteria for showing the products
+        in: query
+        name: sort_by
+        type: string
+      - description: sorting in descending order
+        in: query
+        name: sort_desc
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Response'
+      summary: List All products
+      tags:
+      - Products
   /user/signup:
     post:
       consumes:
